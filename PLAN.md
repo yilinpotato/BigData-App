@@ -13,18 +13,19 @@
 - [x] Spark/PySpark 3.5.5（复用 lab_env），验证从 HDFS 读数据成功
 - [ ] （可选）配置 Hive
 
-## 阶段 2 — 数据入 HDFS（对应：HDFS 存储策略 5 分）
+## 阶段 2 — 数据入 HDFS（对应：HDFS 存储策略 5 分）✅
 - [x] 将 6 个 CSV 上传到 HDFS `hdfs:///steam/raw`（`hdfs dfs -put`）
-- [ ] 设计存储策略：目录分区、CSV → Parquet 转换、压缩
-- [ ] 编写数据加载脚本（从 hdfs:// 读取）
+- [x] 存储策略：清洗后写 Parquet（列式+压缩），主表按 `release_year` 分区 → `hdfs:///steam/clean`
+- [x] 数据加载模块 `src/common.py`（从 hdfs:// 读取）
 
-## 阶段 3 — 清洗与预处理（对应：预处理 8 分 + 管线设计 10 分）
-- [ ] 类型转换（日期、数值、布尔）
-- [ ] 多值字段拆分：platforms / categories / genres / steamspy_tags（`;` 分隔）
-- [ ] 解析 owners 拥有量区间为数值
-- [ ] 缺失值/异常值处理
-- [ ] 标签宽表 → 长表
-- [ ] requirements/media 的 HTML/JSON 解析
+## 阶段 3 — 清洗与预处理（对应：预处理 8 分 + 管线设计 10 分）🔄
+- [x] 类型转换（日期、数值、布尔）
+- [x] 派生字段：好评率、总评价、是否免费、owners 上下界/中位
+- [x] 多值字段计数 + 平台布尔（platforms/categories/genres）
+- [x] 解析 owners 拥有量区间为数值
+- [x] 缺失值/异常值处理（去重、空 name 过滤、负价归零）
+- [x] 标签宽表 → 长表（215,633 行，votes>0）→ `hdfs:///steam/clean/tags_long`
+- [ ] requirements/media 的 HTML/JSON 解析（按需，深度加分）
 
 ## 阶段 4 — 分析问题（对应：分析方法 8 分 + 关键发现 6 分）
 设计 6–8 个分析问题（PySpark + Spark SQL），候选：
