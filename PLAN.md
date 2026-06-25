@@ -8,13 +8,13 @@
 - [x] 初始化本地 Git 仓库、目录结构、README、计划单
 - [ ] 推送到 GitHub 公开仓库 `yilinpotato/BigData-App`（待网络/凭据就绪）
 
-## 阶段 1 — 环境搭建
-- [ ] 安装/启动 Hadoop HDFS（伪分布式或 Docker）
-- [ ] 安装 Spark / PySpark，验证 `pyspark` 与 `hdfs dfs` 可用
+## 阶段 1 — 环境搭建 ✅
+- [x] 安装/启动 Hadoop 3.3.6 HDFS（单机伪分布式，Java 17，免 sudo/SSH）
+- [x] Spark/PySpark 3.5.5（复用 lab_env），验证从 HDFS 读数据成功
 - [ ] （可选）配置 Hive
 
 ## 阶段 2 — 数据入 HDFS（对应：HDFS 存储策略 5 分）
-- [ ] 将 CSV 上传到 HDFS（`hdfs dfs -put`）
+- [x] 将 6 个 CSV 上传到 HDFS `hdfs:///steam/raw`（`hdfs dfs -put`）
 - [ ] 设计存储策略：目录分区、CSV → Parquet 转换、压缩
 - [ ] 编写数据加载脚本（从 hdfs:// 读取）
 

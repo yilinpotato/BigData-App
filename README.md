@@ -49,13 +49,25 @@
 └── report/                # 项目报告 (PDF / Markdown 源)
 ```
 
-## 4. 运行环境（计划）
+## 4. 运行环境
 
-- Hadoop（HDFS 伪分布式或 Docker）
-- Apache Spark / PySpark
-- Python 3.x：pyspark, pandas, matplotlib, seaborn, plotly, jupyter
+单机大数据栈（无需 sudo，用户级安装）。详见 [setup/README.md](setup/README.md)。
 
-> 详细环境搭建步骤在项目推进中补充到本节。
+| 组件 | 版本 |
+|---|---|
+| Java | OpenJDK 17 (Temurin) |
+| HDFS | Hadoop 3.3.6（单机伪分布式，`hdfs://localhost:9000`） |
+| Spark / PySpark | 3.5.5 |
+| Python 栈 | pandas, numpy, matplotlib, seaborn, JupyterLab（venv `lab_env`） |
+
+一键启动：
+
+```bash
+bash setup/00_install_stack.sh   # 首次安装
+bash setup/01_start_hdfs.sh      # 启动 HDFS
+bash setup/02_load_data.sh       # 上传 CSV 到 hdfs:///steam/raw
+source setup/env.sh              # 加载环境变量
+```
 
 ## 5. 进度
 
