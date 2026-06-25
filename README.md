@@ -46,8 +46,11 @@
 ├── src/                   # PySpark 加载/清洗/分析脚本 (.py)
 ├── sql/                   # Spark SQL / HiveQL 脚本
 ├── figures/               # 生成的可视化图表
-└── report/                # 项目报告 (PDF / Markdown 源)
+├── report/                # 项目报告 (PDF / Markdown 源)
+└── app/                   # Streamlit 交互式仪表盘（加分项）
 ```
+
+交互式仪表盘（含团队名）：`streamlit run app/dashboard.py`，详见 [app/README.md](app/README.md)。
 
 ## 4. 运行环境
 

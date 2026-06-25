@@ -57,9 +57,11 @@
 - [x] 结论与反思
 - [x] 整体连贯性 + 团队分工（初稿，待按实际微调）
 
-## 阶段 8 — 加分项（最多 +10）
-- [ ] Streamlit / Plotly Dash 仪表盘（含团队名「罗马」）
-- [ ] （可选）部署公开访问 URL
+## 阶段 8 — 加分项（最多 +10）🔄
+- [x] Streamlit 仪表盘（含团队名「罗马」），`app/dashboard.py`，8 个分析 Tab + 概览
+- [x] 数据导出 `src/export_dashboard_data.py`（Spark 预计算 → `app/data/*.csv`）
+- [x] AppTest 验证 0 异常；`app/requirements.txt` 就绪可部署
+- [ ] （可选）部署到 Streamlit Cloud 拿公开 URL（需你的账号登录）
 
 ## 阶段 9 — 打包提交
 - [ ] 整理 notebook + .py + SQL + 报告 PDF
