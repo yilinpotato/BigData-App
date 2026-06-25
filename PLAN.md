@@ -27,23 +27,24 @@
 - [x] 标签宽表 → 长表（215,633 行，votes>0）→ `hdfs:///steam/clean/tags_long`
 - [ ] requirements/media 的 HTML/JSON 解析（按需，深度加分）
 
-## 阶段 4 — 分析问题（对应：分析方法 8 分 + 关键发现 6 分）
-设计 6–8 个分析问题（PySpark + Spark SQL），候选：
-- [ ] Q1 年度发行趋势（游戏数量随时间变化）
-- [ ] Q2 热门类型/标签及其好评率
-- [ ] Q3 价格分布；价格 vs 评价/拥有量；免费 vs 付费
-- [ ] Q4 游玩时长 vs 类型（用户粘性）
-- [ ] Q5 Top 开发商/发行商（数量 & 口碑）
-- [ ] Q6 平台支持（win/mac/linux）趋势
-- [ ] Q7 标签共现 / 最热门标签
-- [ ] Q8 成就数 vs 时长/评分
+## 阶段 4 — 分析问题（对应：分析方法 8 分 + 关键发现 6 分）✅
+8 个分析问题已在 `notebooks/steam_analysis.ipynb`（PySpark + Spark SQL）完成并执行出图：
+- [x] Q1 年度发行趋势（游戏数量随时间变化）
+- [x] Q2 热门类型及其好评率（explode genres）
+- [x] Q3 价格分布；价格 vs 评价/拥有量；免费 vs 付费
+- [x] Q4 游玩时长 vs 类型（用户粘性）
+- [x] Q5 Top 开发商/发行商（数量 & 口碑）
+- [x] Q6 平台支持（win/mac/linux）趋势
+- [x] Q7 最热门标签（tags_long 聚合）
+- [x] Q8 成就数 vs 时长/评分
+- 产出: `sql/analysis_queries.sql`、`src/steam_analysis.py`（notebook 导出）
 
 ## 阶段 5 — Hive 数据仓库（可选加分，对应：SQL/HiveQL 5 分）
 - [ ] 建 Hive 外部表
 - [ ] 编写 HiveQL 分析脚本
 
-## 阶段 6 — 可视化（对应：可视化 8 分）
-- [ ] 用 matplotlib/seaborn/plotly 出图，每图配解读
+## 阶段 6 — 可视化（对应：可视化 8 分）✅
+- [x] 8 张图（matplotlib/seaborn）存于 `figures/`，notebook 内每图配中文解读
 
 ## 阶段 7 — 报告 PDF（对应：报告 50 分）
 - [ ] 数据集介绍
