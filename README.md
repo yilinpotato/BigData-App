@@ -80,5 +80,22 @@ source setup/env.sh              # 加载环境变量
 
 | 成员 | 分工 |
 |---|---|
-| 罗景楠 | 待补充 |
-| 马亦麟 | 待补充 |
+| 罗景楠 | 数据工程：HDFS 环境搭建、数据入库、Spark 清洗管线（`setup/`、`src/clean_pipeline.py`） |
+| 马亦麟 | 分析与可视化：8 个分析问题的 Spark SQL、图表与解读、仪表盘（`notebooks/`、`sql/`、`app/`） |
+| 共同 | 报告撰写、结果验证与演示 |
+
+> 分工为初稿，按实际贡献调整。
+
+## 7. 交付物对照评分细则
+
+| 评分项 | 对应交付物 |
+|---|---|
+| 数据集介绍 | `report/report.pdf` §1、本 README §2 |
+| HDFS 存储与访问策略 | `report/report.pdf` §2、`setup/`、`dataset/README.md` |
+| 数据预处理（清洗/解析/缺失值） | `src/clean_pipeline.py`、`report` §3 |
+| 分析问题与方法（Spark/SQL/Hive） | `notebooks/steam_analysis.ipynb`、`sql/analysis_queries.sql`、`sql/hive_setup.hql` |
+| 关键发现 + 可视化 | `report` §4–5、`figures/`（8 图） |
+| 结论与反思 | `report` §5–6 |
+| 完整可执行代码 | `notebooks/`（已执行）、`src/*.py` |
+| SQL / HiveQL 脚本 | `sql/analysis_queries.sql`、`sql/hive_setup.hql` |
+| 加分：仪表盘 | `app/dashboard.py`（Streamlit，含团队名「罗马」） |

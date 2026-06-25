@@ -64,6 +64,7 @@
 - [x] AppTest 验证 0 异常；`app/requirements.txt` 就绪可部署
 - [ ] （可选）部署到 Streamlit Cloud 拿公开 URL（需你的账号登录）
 
-## 阶段 9 — 打包提交
-- [ ] 整理 notebook + .py + SQL + 报告 PDF
-- [ ] 最终自检对照评分细则
+## 阶段 9 — 打包提交 ✅
+- [x] 整理 notebook + .py + SQL + 报告 PDF + 仪表盘
+- [x] README 增加「交付物对照评分细则」表，填好团队分工
+- [x] 全部推送到 GitHub 公开仓库
