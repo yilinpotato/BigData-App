@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+
+# Spark / Hadoop
+spark-warehouse/
+metastore_db/
+derby.log
+*.crc
+_SUCCESS
+checkpoint/
+
+# Jupyter
+.jupyter/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Outputs (keep figures/ committed; ignore scratch)
+tmp/
+scratch/
+*.log
