@@ -39,9 +39,10 @@
 - [x] Q8 成就数 vs 时长/评分
 - 产出: `sql/analysis_queries.sql`、`src/steam_analysis.py`（notebook 导出）
 
-## 阶段 5 — Hive 数据仓库（可选加分，对应：SQL/HiveQL 5 分）
-- [ ] 建 Hive 外部表
-- [ ] 编写 HiveQL 分析脚本
+## 阶段 5 — Hive 数据仓库（可选加分，对应：SQL/HiveQL 5 分）✅
+- [x] Spark + Hive 支持（enableHiveSupport，持久化 metastore），数仓层物化扁平 Parquet
+- [x] 建外部表 `steam.games` / `steam.tags_long`（`src/hive_warehouse.py`）
+- [x] HiveQL 分析脚本 `sql/hive_setup.hql`（建库建表 + 3 个查询，已执行验证）
 
 ## 阶段 6 — 可视化（对应：可视化 8 分）✅
 - [x] 8 张图（matplotlib/seaborn）存于 `figures/`，notebook 内每图配中文解读
