@@ -76,26 +76,44 @@ source setup/env.sh              # 加载环境变量
 
 见 [PLAN.md](PLAN.md)。
 
-## 6. 团队分工
+## 6. 最终提交物
+
+| 提交物 | 路径 / 链接 |
+|---|---|
+| 英文正式报告 | [`report/report_en.pdf`](report/report_en.pdf) |
+| 中文备份报告 | [`report/report.pdf`](report/report.pdf) |
+| 分析 Notebook | [`notebooks/steam_analysis.ipynb`](notebooks/steam_analysis.ipynb) |
+| Spark / HDFS 脚本 | [`src/`](src/) |
+| SQL / HiveQL | [`sql/analysis_queries.sql`](sql/analysis_queries.sql)、[`sql/hive_setup.hql`](sql/hive_setup.hql) |
+| 可视化图表 | [`figures/`](figures/) |
+| 交互式 Dashboard（加分项） | https://bigdata-app-nckiksi6ebas3bxbgdr5m9.streamlit.app/ |
+
+## 7. 评分重点速查
+
+| Rubric | 本项目证据 |
+|---|---|
+| Project Report 50 分 | `report/report_en.pdf`：数据集、HDFS 策略、清洗、8 个分析问题、关键发现、可视化、结论反思、团队分工 |
+| Source Code 50 分 | `setup/`、`src/`、`notebooks/`、`sql/`：可执行 Spark/HDFS 清洗分析流程、Spark SQL、HiveQL、代码结构与注释 |
+| Optional Bonus 最多 10 分 | Streamlit Dashboard：8 个交互式 Tab + 概览指标，运行代码见 `app/` |
+
+## 8. 团队分工
 
 | 成员 | 分工 |
 |---|---|
-| 罗景楠 | 数据工程：HDFS 环境搭建、数据入库、Spark 清洗管线（`setup/`、`src/clean_pipeline.py`） |
-| 马亦麟 | 分析与可视化：8 个分析问题的 Spark SQL、图表与解读、仪表盘（`notebooks/`、`sql/`、`app/`） |
-| 共同 | 报告撰写、结果验证与演示 |
+| 罗景楠 | 数据工程与复现：HDFS 环境搭建、数据入库、Spark 清洗管线、Hive 数仓验证（`setup/`、`src/clean_pipeline.py`、`src/hive_warehouse.py`） |
+| 马亦麟 | 分析与展示：8 个分析问题的 Spark SQL、图表与解读、Streamlit 仪表盘（`notebooks/`、`sql/`、`app/`） |
+| 共同 | 报告撰写、结果校验、演示材料整理与 GitHub 交付 |
 
-> 分工为初稿，按实际贡献调整。
-
-## 7. 交付物对照评分细则
+## 9. 交付物对照评分细则
 
 | 评分项 | 对应交付物 |
 |---|---|
-| 数据集介绍 | `report/report.pdf` §1、本 README §2 |
-| HDFS 存储与访问策略 | `report/report.pdf` §2、`setup/`、`dataset/README.md` |
-| 数据预处理（清洗/解析/缺失值） | `src/clean_pipeline.py`、`report` §3 |
+| 数据集介绍 | `report/report_en.pdf` §1、本 README §2 |
+| HDFS 存储与访问策略 | `report/report_en.pdf` §2、`setup/`、`dataset/README.md` |
+| 数据预处理（清洗/解析/缺失值） | `src/clean_pipeline.py`、`report/report_en.pdf` §3 |
 | 分析问题与方法（Spark/SQL/Hive） | `notebooks/steam_analysis.ipynb`、`sql/analysis_queries.sql`、`sql/hive_setup.hql` |
-| 关键发现 + 可视化 | `report` §4–5、`figures/`（8 图） |
-| 结论与反思 | `report` §5–6 |
+| 关键发现 + 可视化 | `report/report_en.pdf` §4–5、`figures/`（8 图 + Dashboard 截图） |
+| 结论与反思 | `report/report_en.pdf` §5–6 |
 | 完整可执行代码 | `notebooks/`（已执行）、`src/*.py` |
 | SQL / HiveQL 脚本 | `sql/analysis_queries.sql`、`sql/hive_setup.hql` |
-| 加分：仪表盘 | `app/dashboard.py`（Streamlit，含团队名「罗马」） |
+| 加分：仪表盘 | `app/dashboard.py` 与线上 Dashboard（Streamlit，含团队名「罗马」） |

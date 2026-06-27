@@ -7,9 +7,30 @@
 
 ---
 
+## 0. 最终提交物与评分重点
+
+最终建议提交以下材料：
+
+| 材料 | 具体内容 | 作用 |
+|---|---|---|
+| 项目仓库 | GitHub 仓库：https://github.com/yilinpotato/BigData-App | 包含完整代码、脚本、SQL、Notebook、图表、报告与仪表盘文件 |
+| 最终报告 | `report/report_en.pdf` | 英文正式报告，对应报告部分评分 |
+| 可执行分析 | `notebooks/steam_analysis.ipynb`、`src/*.py` | 证明 Spark/HDFS 清洗与分析流程可复现 |
+| SQL / HiveQL | `sql/analysis_queries.sql`、`sql/hive_setup.hql` | 证明结构化查询与 Hive 数仓实现 |
+| 可视化结果 | `figures/*.png` 与 Dashboard 截图 | 支撑报告中的关键发现 |
+| Dashboard 加分项 | https://bigdata-app-nckiksi6ebas3bxbgdr5m9.streamlit.app/ | 交互式展示，争取扩展实现加分 |
+
+评分主要分为两部分：
+
+- **项目报告（50 分）**：数据集介绍、HDFS 存储/访问策略、数据预处理、分析问题与方法、关键发现、可视化解释、结论反思、整体连贯性、展示质量和团队分工。
+- **源代码（50 分）**：Notebook 或脚本是否完整可执行，Spark/HDFS 加载与清洗管线是否合理，工具使用是否正确，代码结构与注释质量，SQL/HiveQL 是否完整，方法是否有深度，结果和演示是否完整。
+- **可选加分（最多 10 分）**：Dashboard 或 Web 界面等扩展实现。本项目已提供包含 8 个交互式分析 Tab 的 Streamlit Dashboard。
+
+---
+
 ## 1. 引言与数据集介绍
 
-电子游戏是全球最大的数字娱乐产业之一，Steam 是 PC 平台最主要的游戏分发渠道。本项目对 Steam 商店约 2.7 万款游戏的结构化数据进行大数据分析，挖掘**市场结构、定价规律、用户粘性、平台战略**等方面的规律，完整演练 **HDFS 存储 → PySpark 清洗 → Spark SQL 分析 → 可视化** 的大数据处理流程。
+电子游戏是全球最大的数字娱乐产业之一，Steam 是 PC 平台最主要的游戏分发渠道。本项目对 Steam 商店约 2.7 万款游戏的结构化数据进行大数据分析，挖掘**市场结构、定价规律、用户粘性、平台战略**等方面的规律，完整演练 **HDFS 存储 -> PySpark 清洗 -> Spark SQL / HiveQL 分析 -> 可视化 -> 交互式仪表盘展示** 的大数据处理流程。项目最终交付包括可执行脚本、已运行的 Notebook、SQL/HiveQL 查询、8 张可视化图表、PDF 报告以及 Streamlit Dashboard。
 
 数据集来自 Kaggle [Steam Store Games (Clean Dataset)](https://www.kaggle.com/datasets/nikdavis/steam-store-games/data)，由 SteamSpy 与 Steam Storefront API 抓取（2019 年快照），共 **6 个 CSV、约 242 MB**，以 `appid` 为主键关联：
 
@@ -35,8 +56,10 @@
 | 存储 | Hadoop HDFS（单机伪分布式） | 3.3.6 |
 | 计算 | Apache Spark / PySpark | 3.5.5 |
 | 查询 | Spark SQL | 3.5.5 |
+| 数仓 | Hive Metastore / HiveQL（Spark Hive Support） | 与 Spark 3.5.5 集成 |
 | 运行时 | OpenJDK | 17 (Temurin) |
 | 可视化 | matplotlib / seaborn | — |
+| 展示 | Streamlit / Altair | Dashboard 加分项 |
 
 整个栈在 **WSL2 + Ubuntu 22.04** 上以**用户级、无需 root** 的方式部署。
 
@@ -66,13 +89,30 @@ hdfs:///steam/clean/    清洗后的列式数据
 
 > 全部启动脚本见仓库 `setup/`（`00_install_stack.sh` / `01_start_hdfs.sh` / `02_load_data.sh` / `env.sh`）。
 
+### 2.4 Hive 数仓与交互式展示
+
+在 Spark 清洗层之上，项目额外实现了 Hive 数据仓库与仪表盘两个扩展模块：
+
+- **Hive 数仓**：`src/hive_warehouse.py` 启用 `enableHiveSupport()`，将清洗后的 Parquet 物化为 `hdfs:///steam/warehouse/games`，并在 `steam` 数据库下建立 `games` 与 `tags_long` 两张外部表。`sql/hive_setup.hql` 给出建库、建表以及发行趋势、价格口碑、热门标签三个 HiveQL 查询，证明数据可以通过 SQL 数仓方式复用。
+- **Streamlit Dashboard**：`src/export_dashboard_data.py` 用 Spark 预计算 8 个分析问题的聚合结果，导出到 `app/data/*.csv`；`app/dashboard.py` 在运行时只依赖 pandas、Streamlit 与 Altair，因此可以脱离 HDFS/Spark 部署。仪表盘包含概览指标卡与 8 个交互式分析 Tab，作为代码部分的扩展实现与演示加分项。
+
+### 2.5 Dashboard 可视化展示
+
+已部署的 Dashboard 将 Spark 计算结果做成交互式页面，包含 5 个概览指标，以及与 8 个分析问题一一对应的 Tab。
+
+![Dashboard overview](../figures/dashboard_overview.png)
+
+价格 Tab 使用双轴交互图：柱状图表示各价格区间平均好评率，折线表示估计平均拥有量，使“低价不等于走量”的结论在演示时更直观。
+
+![Dashboard price tab](../figures/dashboard_price_tab.png)
+
 ---
 
 ## 3. 数据预处理（Spark 清洗管线）
 
 清洗管线 `src/clean_pipeline.py` 从 HDFS 读原始 CSV，输出清洗后的 Parquet，关键步骤：
 
-1. **类型转换**：`release_date → date`、评价数/时长 → 整型、`price → double`、布尔字段转换。
+1. **类型转换**：`release_date -> date`、评价数/时长 -> 整型、`price -> double`、布尔字段转换。
 2. **派生字段**：
    - `positive_ratio = positive /(positive + negative)`（好评率）
    - `total_ratings`、`is_free`（价格为 0）
@@ -84,11 +124,74 @@ hdfs:///steam/clean/    清洗后的列式数据
 
 清洗结果：主表 **27,075** 行（全部有效），整体平均好评率 **0.714**，免费游戏 **2,560** 款。
 
+### 3.1 关键清洗代码
+
+下面的代码片段展示了清洗管线如何把原始字符串字段转换为可分析字段，并派生评价、价格、拥有量和平台指标：
+
+```python
+g = (raw
+    .withColumn("appid", F.col("appid").cast(T.IntegerType()))
+    .withColumn("release_date", F.to_date("release_date", "yyyy-MM-dd"))
+    .withColumn("price", F.col("price").cast(T.DoubleType()))
+    .withColumn("release_year", F.year("release_date"))
+    .withColumn("total_ratings", F.col("positive_ratings") + F.col("negative_ratings"))
+    .withColumn(
+        "positive_ratio",
+        F.when(F.col("total_ratings") > 0,
+               F.col("positive_ratings") / F.col("total_ratings"))
+    )
+    .withColumn("is_free", F.col("price") == 0)
+    .withColumn("owners_low", F.split("owners", "-").getItem(0).cast(T.LongType()))
+    .withColumn("owners_high", F.split("owners", "-").getItem(1).cast(T.LongType()))
+    .withColumn("owners_mid", ((F.col("owners_low") + F.col("owners_high")) / 2).cast(T.LongType()))
+    .withColumn("on_windows", F.col("platforms").contains("windows"))
+    .withColumn("on_mac", F.col("platforms").contains("mac"))
+    .withColumn("on_linux", F.col("platforms").contains("linux")))
+```
+
+标签表原本是稀疏宽表，使用 Spark `stack()` 转为长表，便于后续 SQL 聚合：
+
+```python
+tag_cols = [c for c in tags.columns if c != "appid"]
+pairs = ", ".join([f"'{c}', `{c}`" for c in tag_cols])
+stack_expr = f"stack({len(tag_cols)}, {pairs}) as (tag, votes)"
+tags_long = (tags.select(F.col("appid").cast(T.IntegerType()), F.expr(stack_expr))
+                  .withColumn("votes", F.col("votes").cast(T.IntegerType()))
+                  .filter(F.col("votes") > 0))
+```
+
 ---
 
 ## 4. 分析问题、方法与发现
 
-围绕 8 个分析问题，统一以 **Spark SQL / DataFrame API** 计算聚合结果，再用 matplotlib/seaborn 可视化。完整代码见 `notebooks/steam_analysis.ipynb`，SQL 见 `sql/analysis_queries.sql`。
+围绕 8 个分析问题，项目统一以 **Spark SQL / DataFrame API** 计算聚合结果，再用 matplotlib/seaborn 可视化；其中核心查询整理为 `sql/analysis_queries.sql`，部分查询也通过 Hive 外部表在 `sql/hive_setup.hql` 中复现。完整分析流程见已执行的 `notebooks/steam_analysis.ipynb` 与导出的 `src/steam_analysis.py`。
+
+### 4.1 关键查询与可视化代码
+
+价格分析使用 Spark SQL 构造价格分桶；同一聚合结果导出到 Dashboard 后，用 Altair 做双轴交互图：
+
+```sql
+SELECT CASE
+         WHEN price = 0 THEN '0 Free'
+         WHEN price < 5 THEN '<5'
+         WHEN price < 10 THEN '5-10'
+         WHEN price < 20 THEN '10-20'
+         WHEN price < 40 THEN '20-40'
+         ELSE '40+' END AS price_band,
+       COUNT(*) AS n,
+       ROUND(AVG(positive_ratio), 3) AS avg_ratio,
+       ROUND(AVG(owners_mid), 0) AS avg_owners
+FROM games
+GROUP BY price_band;
+```
+
+```python
+base = alt.Chart(d).encode(x=alt.X("price_band:N", sort=order))
+bar = base.mark_bar(color="#9ecae1").encode(y="avg_ratio:Q")
+line = base.mark_line(point=True, color="#d62728").encode(y="avg_owners:Q")
+st.altair_chart(alt.layer(bar, line).resolve_scale(y="independent"),
+                width="stretch")
+```
 
 ### Q1 年度发行趋势
 **方法**：按 `release_year` 分组计数（Spark SQL）。  
@@ -135,26 +238,40 @@ hdfs:///steam/clean/    清洗后的列式数据
 ## 5. 结论
 
 1. **市场结构**：Steam 自 2014 年起进入独立游戏井喷期，Indie/Action/Casual 在数量上主导，但同质化也压低了长尾产品的口碑。
-2. **商业规律**：定价集中于低价区，但**低价 ≠ 走量**——<£5 多为低质长尾，免费与中高价精品才同时获得高拥有量；中端定价口碑最佳。
+2. **商业规律**：定价集中于低价区，但**低价不等于走量**——<£5 多为低质长尾，免费与中高价精品才同时获得高拥有量；中端定价口碑最佳。
 3. **用户粘性**：多人 / 网游 / RPG / 策略类时长最长，粘性源于可重复游玩与长期养成机制。
 4. **平台与机制**：跨平台支持随厂商战略（SteamOS）起落；成就系统与玩家满意度、留存正相关。
+5. **工程收获**：HDFS 原始区/清洗区分层、Parquet 分区、Spark SQL 聚合、Hive 外部表与预计算 Dashboard 串成了一个可复现的数据应用闭环，而不是只停留在离线图表分析。
 
 ## 6. 反思与局限
 
 - 数据为 **2019 年快照**，无法反映近年趋势；`owners` 为区间估计、`price` 为英镑计价，分析结论偏宏观。
 - 缺少**真实文本评论**，好评率只能由 positive/negative 计数近似，无法做情感细分。
 - 未深入解析 `description / requirements` 中的文本与 HTML 字段。**后续可**：解析描述做 NLP 主题/情感分析、引入时间序列建模、用标签共现做社区/聚类分析。
-- 工程上单机 HDFS 仅作教学演示，真实场景应为多节点集群并引入 Hive/数据治理。
+- 工程上单机 HDFS 仅作教学演示，真实场景应扩展为多节点集群，并进一步补充调度、权限、元数据治理与质量监控。
 
 ## 7. 团队分工
 
 | 成员 | 主要分工 |
 |---|---|
-| 罗景楠 | 数据工程：HDFS 环境搭建、数据入库、Spark 清洗管线（`setup/`、`src/clean_pipeline.py`） |
-| 马亦麟 | 分析与可视化：8 个分析问题的 Spark SQL、图表与解读（`notebooks/`、`sql/`） |
-| 共同 | 报告撰写、结果验证与演示 |
+| 罗景楠 | 数据工程与复现：HDFS 环境搭建、数据入库、Spark 清洗管线、Hive 数仓验证（`setup/`、`src/clean_pipeline.py`、`src/hive_warehouse.py`） |
+| 马亦麟 | 分析与展示：8 个分析问题的 Spark SQL、图表与解读、Streamlit 仪表盘（`notebooks/`、`sql/`、`app/`） |
+| 共同 | 报告撰写、结果校验、演示材料整理与 GitHub 交付 |
 
-> （以上分工为初稿，可按实际贡献调整。）
+---
+
+## 8. 评分细则对照
+
+| Rubric 要求 | 本项目对应交付 |
+|---|---|
+| 数据集介绍 | 第 1 节；`dataset/README.md` |
+| HDFS 存储与访问策略 | 第 2 节；`setup/`；`src/common.py` |
+| 清洗、解析、缺失值处理 | 第 3 节；`src/clean_pipeline.py` |
+| Spark / Hive / SQL 分析方法 | 第 4 节；`notebooks/steam_analysis.ipynb`；`sql/analysis_queries.sql`；`sql/hive_setup.hql` |
+| 关键发现与解释 | 第 4-5 节，8 个问题均给出数据结论 |
+| 可视化与解读 | `figures/` 中 8 张图；第 2.5 节 Dashboard 截图；报告第 4 节；`app/dashboard.py` |
+| 结论与反思 | 第 5-6 节 |
+| 完整可执行代码与扩展实现 | `src/*.py`、`notebooks/`、`sql/`、`app/`；Streamlit Dashboard 作为加分项 |
 
 ---
 
@@ -167,6 +284,9 @@ bash setup/00_install_stack.sh   # 安装 Hadoop（首次）
 bash setup/01_start_hdfs.sh      # 启动单机 HDFS
 bash setup/02_load_data.sh       # CSV 入 HDFS
 source setup/env.sh
-python src/clean_pipeline.py     # 清洗 → Parquet
+python src/clean_pipeline.py     # 清洗 -> Parquet
 # 打开 notebooks/steam_analysis.ipynb 运行分析
+python src/hive_warehouse.py     # 可选：建立 Hive 外部表并执行 HiveQL 查询
+python src/export_dashboard_data.py
+streamlit run app/dashboard.py   # 可选：启动交互式仪表盘
 ```
